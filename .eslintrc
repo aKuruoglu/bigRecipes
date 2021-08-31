@@ -1,0 +1,39 @@
+{
+  "env":                            {
+    "node":                         true,
+    "es6":                          true,
+    "mocha":                        true
+  },
+  "extends":                        "eslint:recommended",
+  "parserOptions":                  {
+    "sourceType":                   "module",
+    "ecmaVersion":                  2018,
+    "experimentalObjectRestSpread": true
+  },
+  "rules":                          {
+    "no-console":                   ["error"],
+    "space-before-function-paren":  ["error"],
+    "object-curly-spacing":         ["error", "always"],
+    "no-unneeded-ternary":          ["error"],
+    "max-statements-per-line": ["error", { "max": 1 }],
+    "lines-between-class-members":  ["error"],
+    "require-await":                ["error"],
+    "no-var":                       ["error"],
+    "no-nested-ternary":            ["error"],
+    "eqeqeq":                       ["error", "always"],
+    "complexity":                   ["error", 8],
+    "max-len":                      ["error", 120],
+    "max-statements":               ["error", 40],
+    "max-lines":                    ["warn", 350],
+    "max-params":                   ["error", 5],
+    "no-unused-vars": ["error", { "vars": "all", "args": "after-used" }],
+    "comma-spacing": ["error", { "before": false, "after": true }],
+    "comma-dangle":                 ["error", "always-multiline"],
+    "no-trailing-spaces":           "error",
+    "camelcase": ["warn", { "properties": "always" }],
+    "indent":                       ["error", 2],
+    "linebreak-style":              ["error", "unix"],
+    "quotes":                       ["error", "single"],
+    "semi":                         ["error", "always"]
+  }
+}
