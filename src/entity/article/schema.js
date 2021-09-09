@@ -1,4 +1,5 @@
-import { Schema, mongoose } from 'mongoose';
+import { Schema } from 'mongoose';
+
 const article = new Schema({
   title: {
     type: String,
@@ -13,12 +14,19 @@ const article = new Schema({
     required: true,
   },
   categoryId: {
-    type: mongoose.ObjectId,
+    type: Schema.ObjectId,
     required: true,
+    index: true,
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false,
   },
 }, {
   typePojoToMixed: false,
   versionKey: false,
 });
+
+article.index({  title: 1, description: 1, isDeleted: 1 });
 
 export default article;

@@ -13,7 +13,7 @@ const log = {
     console.error('\x1b[31m', message);
     console.error('\x1b[0m');
     process.exit(-1);
-  }
+  },
 };
 
 const testCommitMsg = (message) => /^(fix|style|chore|refactor|maintain|feat|merge|test)\(.*\):(.+){5,}/.test(message);
@@ -55,7 +55,7 @@ try {
     log.error(
       `The commit was rejected because its message does not follow commit convention.
       You can see the convention here :
-      https://gitlab.positivethinking.company/adneom-lab/knowledge-base/wikis/git`
+      https://gitlab.positivethinking.company/adneom-lab/knowledge-base/wikis/git`,
     );
   }
 

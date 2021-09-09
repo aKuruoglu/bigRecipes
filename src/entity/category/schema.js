@@ -1,16 +1,20 @@
-import { Schema, mongoose } from 'mongoose';
+import { Schema } from 'mongoose';
+
 const category = new Schema({
   name: {
     type: String,
     required: true,
+    index: true,
   },
   parentCategoryId: {
-    type: mongoose.ObjectId,
-    required: true,
+    type: Schema.ObjectId,
+    index: true,
   },
 }, {
   typePojoToMixed: false,
   versionKey: false,
 });
+
+
 
 export default category;

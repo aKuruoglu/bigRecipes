@@ -34,7 +34,8 @@ class RestifyWrap {
       } catch (e) {
         if(e instanceof Error) {
           logger.error(e.stack);
-          return next(e);
+          logger.error(e.code);
+          return res.send(+e.code, e.errors);
         }
 
         logger.error(e);

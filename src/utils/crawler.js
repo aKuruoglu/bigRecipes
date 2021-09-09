@@ -8,7 +8,7 @@ const parse = (entity, sought, initPath, takeAll, callback) => {
     const itemPath = path.join(initPath, name);
     const stat = fs.statSync(itemPath);
 
-    if (stat && stat.isDirectory(itemPath)) {
+    if (stat && stat.isDirectory (itemPath)) {
       parse(entity, sought, itemPath, takeAll || name === sought, callback);
     } else {
       if (takeAll || name === `${sought}.js`) {
