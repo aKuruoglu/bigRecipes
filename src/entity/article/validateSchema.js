@@ -1,17 +1,16 @@
 import validator from 'components/validator';
 import CategoryControl from 'entity/category/control';
 import ArticleControl from 'entity/article/control';
-import { has, keys, omit } from 'lodash';
 
 class ArticleCheck {
   constructor () {
     this.byArticleIdSchema = {
-      articleId: {
+      id: {
         type: 'objectID',
-        custom: async (value, errors) => {
-          const res = await ArticleControl.checkExistArticle(value);
-          if (!res) {
-            errors.push({ type: 'noArticle', actual: value, code: 404 });
+        custom: async ( value, errors ) => {
+          const res = await ArticleControl.checkExistArticle( value );
+          if ( !res ) {
+            errors.push( { type: 'noArticle', actual: value, code: 404 } );
             return value;
           }
           return value;
@@ -20,12 +19,12 @@ class ArticleCheck {
     };
 
     this.byCategoryIdSchema = {
-      categoryId: {
+      id: {
         type: 'objectID',
-        custom: async (value, errors) => {
-          const res = await CategoryControl.checkExistCategory(value);
-          if (!res) {
-            errors.push({ type: 'noCategory', actual: value, code: 404 });
+        custom: async ( value, errors ) => {
+          const res = await CategoryControl.checkExistCategory( value );
+          if ( !res ) {
+            errors.push( { type: 'noCategory', actual: value, code: 404 } );
             return value;
           }
           return value;
@@ -38,72 +37,26 @@ class ArticleCheck {
       description: { type: 'string', min: 3, max: 255 },
       mainText: { type: 'string' },
     };
-
-    this.updateArticleCategorySchema = {
-      ...this.byCategoryIdSchema,
-      ...this.byArticleIdSchema,
-    };
   }
 
-  async checkCreateArticle ( body ) {
-    const check = await validator.compaileSchema({
-      ...this.mainSchema,
-      ...this.byCategoryIdSchema,
-      $$async: true,
-    });
-    return check(body);
+  checkCreate ( body ) {
+    return validator.checkCreateEntity( body, this.mainSchema );
   }
 
-  async checkDeleteArticle ( articleId ) {
-    const check = await validator.compaileSchema({
-      ...this.byArticleIdSchema,
-      $$async: true,
-    });
-    return check( { articleId } );
+  checkDelete ( id ) {
+    return validator.checkExistId( id, this.byArticleIdSchema );
   }
 
-  async checkUpdateArticleCategory (body) {
-    const check = await validator.compaileSchema({
-      ...this.updateArticleCategorySchema,
-      $$async: true,
-    });
-    return check( body );
+  checkUpdate ( body ) {
+    return validator.checkExistFields( body, this.mainSchema, this.byArticleIdSchema );
   }
 
-  async checkUpdateArticle (body) {
-    console.log(body);
-    const schema = keys(omit(body, ['categoryId']))
-      .reduce((all, key) => {
-        if (has(this.mainSchema, key)) {
-          return {
-            ...all,
-            [key]: this.mainSchema[key],
-          };
-        }
-        return all;
-      }, {});
-    const check = await validator.compaileSchema({
-      ...schema,
-      ...this.byArticleIdSchema,
-      $$async: true,
-    });
-    return check( body );
+  checkExistCategory ( id ) {
+    return validator.checkExistId( id, this.byCategoryIdSchema );
   }
 
-  async checkExistCategory ( categoryId ) {
-    const check = await validator.compaileSchema({
-      ...this.byCategoryIdSchema,
-      $$async: true,
-    });
-    return check( { categoryId } );
-  }
-
-  async checkExistArticle (articleId) {
-    const check = await validator.compaileSchema({
-      ...this.byArticleIdSchema,
-      $$async: true,
-    });
-    return check({ articleId } );
+  checkExist ( id ) {
+    return validator.checkExistId( id, this.byArticleIdSchema );
   }
 }
 

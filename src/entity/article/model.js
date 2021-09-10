@@ -4,35 +4,40 @@ import { cleanData } from 'components/utils';
 const model = db.models.article;
 
 class ArticleModel {
-  async getAllByCategory ( categoryId ) {
-    const articles = await model.find( { categoryId, isDeleted: false } ).lean();
-    return articles.map(item => cleanData(item));
+  async getByCategory ( id ) {
+    const articles = await model.find( { categoryId: id, isDeleted: false } ).lean();
+    return articles.map( item => cleanData( item ) );
   }
 
-  async getById ( articleId ) {
-    const article = await model.findOne({ _id: articleId }).lean();
+  async getById ( id ) {
+    const article = await model.findOne( { _id: id, isDeleted: false } ).lean();
     return cleanData( article );
   }
 
-  createArticle ( body ) {
-    return model.create( body );
+  async create ( body ) {
+    const article = await model.create( body );
+    return cleanData( article.toJSON() );
   }
 
-  async deleteArticle ( articleId ) {
-    await model.findOneAndUpdate({ _id: articleId }, { isDeleted: true }  );
+  async delete ( id ) {
+    await model.findOneAndUpdate( { _id: id, isDeleted: false }, { isDeleted: true } );
   }
 
-  async updateArticle ( { articleId, ...body }  ) {
-    const article = await model.findOneAndUpdate({ _id: articleId }, body  ).lean();
+  async update ( { id, ...body } ) {
+    const article = await model.findOneAndUpdate( { _id: id }, { ...body }, { returnOriginal: false } ).lean();
     return cleanData( article );
   }
 
-  async updateCategory ({ articleId, categoryId }) {
-    await model.findOneAndUpdate({ _id: articleId }, { categoryId }).exec();
+  async updateCategory ( { id, categoryId } ) {
+    const article = await model.findOneAndUpdate( {
+      _id: id,
+      isDeleted: false,
+    }, { categoryId }, { returnOriginal: false } ).lean();
+    return cleanData( article );
   }
 
-  async checkExist ( id  ) {
-    const isExist = await model.findOne({ _id: id } ).exec();
+  async checkExist ( id ) {
+    const isExist = await model.findOne( { _id: id, isDeleted: false } ).exec();
     return !!isExist;
   }
 

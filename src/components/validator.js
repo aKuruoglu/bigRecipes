@@ -35,12 +35,11 @@ class MainValidate extends Validator {
   }
 
   async checkExistId ( id, schema ) {
-    const key = keys( schema );
     const check = await validator.compaileSchema( {
       ...schema,
       $$async: true,
     } );
-    return check( { [ key[ 0 ] ]: id } );
+    return check( { id } );
   }
 
   async checkCreateEntity ( body, schema ) {
