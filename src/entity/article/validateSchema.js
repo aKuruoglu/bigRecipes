@@ -71,6 +71,7 @@ class ArticleCheck {
   }
 
   async checkUpdateArticle (body) {
+    console.log(body);
     const schema = keys(omit(body, ['categoryId']))
       .reduce((all, key) => {
         if (has(this.mainSchema, key)) {

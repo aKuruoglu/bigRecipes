@@ -36,17 +36,28 @@ class RecipeCheck {
       title: { type: 'string', min: 3, max: 100 },
       description: { type: 'string', min: 3, max: 255 },
     };
-
-
   }
 
-  async validateRecipeCreate ( body ) {
-    const check = await validator.compaileSchema( {
+  checkCreateBody ( body ) {
+    return validator.checkCreateEntity( body, {
       ...this.mainSchema,
       ...this.byCategoryIdSchema,
     } );
-    return check( body );
   }
+
+  checkIsExist ( recipeId ) {
+    return validator.checkExistId( recipeId, this.byRecipeIdSchema );
+  }
+
+  checkExistCategory ( categoryId ) {
+    return validator.checkExistId( categoryId, this.byCategoryIdSchema );
+  }
+
+  checkUpdateRecipe ( body ) {
+    return validator.checkExistFields( body, this.mainSchema, this.byRecipeIdSchema );
+  }
+
+
 }
 
 export default new RecipeCheck();
