@@ -2,38 +2,42 @@ import ArticleModel from 'entity/article/model';
 import ArticleCheck from 'entity/article/validateSchema';
 
 class ArticleControl {
-  async getAllArticleByCategory ( { categoryId } = {}) {
+  async getById ( { id } = {} ) {
+    await ArticleCheck.checkExist( id );
+    return ArticleModel.getById( id );
+  }
+
+  async getAllByCategory ( { id } = {} ) {
+    await ArticleCheck.checkExistCategory( id );
+    return ArticleModel.getByCategory( id );
+  }
+
+  async add ( body = {} ) {
+    const { categoryId } = body;
     await ArticleCheck.checkExistCategory( categoryId );
-    return ArticleModel.getAllByCategory( categoryId );
+    await ArticleCheck.checkCreate( body );
+    return ArticleModel.create( body );
   }
 
-  async getArticleById ({ articleId } = {}) {
-    await ArticleCheck.checkExistArticle(articleId);
-    return ArticleModel.getById( articleId );
+  async remove ( { id } = {} ) {
+    await ArticleCheck.checkDelete( id );
+    return ArticleModel.delete( id );
   }
 
-  async articleCreate ( body = {}) {
-    await ArticleCheck.checkCreateArticle(body);
-    return ArticleModel.createArticle( body );
-  }
-
-  async articleDelete ({ articleId } = {}) {
-    await ArticleCheck.checkDeleteArticle( articleId );
-    return ArticleModel.deleteArticle( articleId );
-  }
-
-  async updateCategory ( body = {}) {
-    await ArticleCheck.checkUpdateArticleCategory( body );
+  async updateCategory ( body = {} ) {
+    const { id, categoryId } = body;
+    await ArticleCheck.checkExist( id );
+    await ArticleCheck.checkExistCategory( categoryId );
     return ArticleModel.updateCategory( body );
   }
 
-  async updateArticle ( body = {}) {
-    await ArticleCheck.checkUpdateArticle(body);
-    return ArticleModel.updateArticle( body );
+  async update ( body = {} ) {
+    await ArticleCheck.checkUpdate( body );
+    return ArticleModel.update( body );
   }
 
-  async checkExistArticle (id) {
-    return await ArticleModel.checkExist(id);
+  async checkExistArticle ( id ) {
+    return await ArticleModel.checkExist( id );
   }
 }
 

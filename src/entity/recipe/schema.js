@@ -1,4 +1,5 @@
 import { Schema } from 'mongoose';
+import category from '../category/schema';
 
 const recipe = new Schema( {
   title: {
@@ -11,6 +12,7 @@ const recipe = new Schema( {
   },
   categoryId: {
     type: Schema.ObjectId,
+    $ref: [category],
     required: true,
     index: true,
   },
