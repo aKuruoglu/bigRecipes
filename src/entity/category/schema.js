@@ -9,6 +9,7 @@ const category = new Schema({
   parentCategoryId: {
     type: Schema.ObjectId,
     index: true,
+    default: null,
   },
 }, {
   typePojoToMixed: false,

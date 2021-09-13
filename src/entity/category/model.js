@@ -1,20 +1,18 @@
 import db from 'components/db';
+import QueryBuilder from 'components/queryBuilder';
 
-const model = db.models.category;
-
-class CategoryModel {
-  create ({ name, parentCategoryId }) {
-    return model.create({ name, parentCategoryId });
+class CategoryModel extends QueryBuilder {
+  create ( { name, parentCategoryId = null } = {}) {
+    return super.create( { name, parentCategoryId } );
   }
 
-  delete ({ id } ) {
-    return model.find({ id } ).deleteOne();
+  async delete ( _id ) {
+    const { parentCategoryId } = await super.getById( _id );
+    await this.model.updateMany( { parentCategoryId: _id }, { parentCategoryId } );
+    return super.delete(_id);
   }
 
-  async checkExist ( id ) {
-    const isExist = await model.findOne({ _id: id } ).exec();
-    return !!isExist;
-  }
+
 }
 
-export default new CategoryModel();
+export default new CategoryModel( db.models.category );

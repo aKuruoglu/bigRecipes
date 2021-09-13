@@ -9,6 +9,7 @@ class ArticleModel extends QueryBuilder {
   update ( _id, { title, description, mainText } = {} ) {
     return super.update( _id, { title, description, mainText } );
   }
+
 }
 
 export default new ArticleModel( db.models.article );

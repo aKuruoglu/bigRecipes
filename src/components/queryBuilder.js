@@ -5,8 +5,8 @@ class QueryBuilder {
     this.model = model;
   }
 
-  create ( body ) {
-    const object = this.model.create( body );
+  async create ( body ) {
+    const object = await this.model.create( body );
     return cleanData( object.toJSON() );
   }
 
@@ -15,6 +15,10 @@ class QueryBuilder {
       returnOriginal: false,
       fields: { isDeleted: 0 },
     } ).lean();
+  }
+
+  deleteAllByCategoryId ( categoryId ) {
+    return this.model.updateMany( { categoryId }, { isDeleted: true } );
   }
 
   getByCategory ( categoryId ) {

@@ -1,12 +1,16 @@
 import CategoryModel from 'entity/category/model';
+import ArticleModel from 'entity/article/model';
+import RecipeModel from 'entity/recipe/model';
 
 class CategoryControl {
-  create ({ name = '', parentCategoryId } = {}) {
+  create ({ name, parentCategoryId } = {}) {
     return CategoryModel.create({ name, parentCategoryId });
   }
 
-  delete ( { id } ) {
-    return CategoryModel.delete({ id } );
+  async delete ( { _id } ) {
+    await RecipeModel.deleteAllByCategoryId(_id);
+    await ArticleModel.deleteAllByCategoryId(_id);
+    return CategoryModel.delete( _id );
   }
 
   update ( { id, name } ) {
