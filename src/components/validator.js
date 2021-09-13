@@ -63,7 +63,7 @@ class MainValidate extends Validator {
       }, {} );
     const check = await validator.compaileSchema( {
       ...schema,
-      ...secondSchema,
+      _id: secondSchema,
       $$async: true,
     } );
     return check( body );

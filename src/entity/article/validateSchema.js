@@ -1,14 +1,14 @@
 import validator from 'components/validator';
-import CategoryControl from 'entity/category/control';
-import ArticleControl from 'entity/article/control';
+import CategoryModel from 'entity/category/model';
+import ArticleModel from 'entity/article/model';
 
 class ArticleCheck {
   constructor () {
     this.byArticleIdSchema = {
-      id: {
+      _id: {
         type: 'objectID',
         custom: async ( value, errors ) => {
-          const res = await ArticleControl.checkExistArticle( value );
+          const res = await ArticleModel.checkExist( value );
           if ( !res ) {
             errors.push( { type: 'noArticle', actual: value, code: 404 } );
             return value;
@@ -19,10 +19,10 @@ class ArticleCheck {
     };
 
     this.byCategoryIdSchema = {
-      id: {
+      categoryId: {
         type: 'objectID',
         custom: async ( value, errors ) => {
-          const res = await CategoryControl.checkExistCategory( value );
+          const res = await CategoryModel.checkExist( value );
           if ( !res ) {
             errors.push( { type: 'noCategory', actual: value, code: 404 } );
             return value;
@@ -39,24 +39,24 @@ class ArticleCheck {
     };
   }
 
-  checkCreate ( body ) {
+  create ( body ) {
     return validator.checkCreateEntity( body, this.mainSchema );
   }
 
-  checkDelete ( id ) {
-    return validator.checkExistId( id, this.byArticleIdSchema );
+  delete ( id ) {
+    return validator.checkExistId( id, this.byArticleIdSchema._id );
   }
 
-  checkUpdate ( body ) {
-    return validator.checkExistFields( body, this.mainSchema, this.byArticleIdSchema );
+  update ( body ) {
+    return validator.checkExistFields( body, this.mainSchema, this.byArticleIdSchema._id );
   }
 
-  checkExistCategory ( categoryId ) {
-    return validator.checkExistId( categoryId, this.byCategoryIdSchema );
+  existCategory ( categoryId ) {
+    return validator.checkExistId( categoryId, this.byCategoryIdSchema.categoryId );
   }
 
-  checkExist ( id ) {
-    return validator.checkExistId( id, this.byArticleIdSchema );
+  existId ( _id ) {
+    return validator.checkExistId( _id, this.byArticleIdSchema._id );
   }
 }
 

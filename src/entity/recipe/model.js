@@ -1,50 +1,36 @@
 import db from 'components/db';
-import { cleanData } from 'components/utils';
+import QueryBuilder from 'components/queryBuilder';
 
-const model = db.models.recipe;
+class RecipeModel extends QueryBuilder {
 
-class RecipeModel {
-  async create ( body ) {
-    const recipe = await model.create( body );
-    return cleanData( recipe.toJSON() );
+  create ( body ) {
+    return this.entityCreate( body );
   }
 
-  async delete ( _id ) {
-    const recipe = await model.findOneAndUpdate( { _id }, { isDeleted: true } ).lean();
-    return cleanData( recipe );
+  delete ( _id ) {
+    return this.entityDelete( _id );
   }
 
-  getAllByCategory ( id ) {
-    return model.find( { categoryId: id, isDeleted: false }, {
-      isDeleted: 0,
-    } ).lean();
+  getByCategory ( id ) {
+    return this.entityGetByCategory( id );
   }
 
-  async getOneById ( _id ) {
-    const recipe = await model.findOne( { _id, isDeleted: false } ).lean();
-    return cleanData( recipe );
+  getById ( _id ) {
+    return this.entityGetById( _id );
   }
 
-  async updateCategory ( { categoryId, _id } ) {
-    const recipe = await model.findOneAndUpdate( {
-      _id,
-      isDeleted: false,
-    }, { categoryId }, { returnOriginal: false } ).lean();
-    return cleanData( recipe );
+  updateCategory ( body ) {
+    return this.entityUpdateCategory( body );
   }
 
-  async update ( { _id, ...body } = {} ) {
-    const recipe = await model.findOneAndUpdate( {
-      _id,
-      isDeleted: false,
-    }, { ...body }, { returnOriginal: false } ).lean();
-    return cleanData( recipe );
+  update ( body ) {
+    const { _id, title, description } = body;
+    return this.entityUpdate( _id, { title, description } );
   }
 
-  async isExist ( _id ) {
-    const isExist = await model.findOne( { _id, isDeleted: false } ).lean();
-    return !!isExist;
+  checkExist ( id ) {
+    return this.entityExist( id );
   }
 }
 
-export default new RecipeModel();
+export default new RecipeModel( db.models.recipe );
