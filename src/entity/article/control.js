@@ -21,7 +21,7 @@ class ArticleControl {
   }
 
   async remove ( { _id } = {} ) {
-    await ArticleCheck.delete( _id );
+    await ArticleCheck.existId( _id );
     return ArticleModel.delete( _id );
   }
 

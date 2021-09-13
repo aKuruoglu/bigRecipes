@@ -34,7 +34,7 @@ class MainValidate extends Validator {
     };
   }
 
-  async checkExistId ( _id, schema ) {
+  async existId ( _id, schema ) {
     const check = await validator.compaileSchema( {
       _id: schema,
       $$async: true,
@@ -42,7 +42,7 @@ class MainValidate extends Validator {
     return check( { _id } );
   }
 
-  async checkCreateEntity ( body, schema ) {
+  async create ( body, schema ) {
     const check = await validator.compaileSchema( {
       ...schema,
       $$async: true,
@@ -50,7 +50,7 @@ class MainValidate extends Validator {
     return check( body );
   }
 
-  async checkExistFields ( body, mainSchema, secondSchema ) {
+  async existFields ( body, mainSchema, secondSchema ) {
     const schema = keys( omit( body, ['categoryId'] ) )
       .reduce( ( all, key ) => {
         if ( has( mainSchema, key ) ) {

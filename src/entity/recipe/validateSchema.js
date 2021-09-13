@@ -39,22 +39,18 @@ class RecipeCheck {
   }
 
   create ( body ) {
-    return validator.checkCreateEntity( body, {
+    return validator.create( body, {
       ...this.mainSchema,
       ...this.byCategoryIdSchema,
     } );
   }
 
   existId ( id ) {
-    return validator.checkExistId( id, this.byRecipeIdSchema._id );
-  }
-
-  existCategoryId ( categoryId ) {
-    return validator.checkExistId( categoryId, this.byCategoryIdSchema.categoryId);
+    return validator.existId( id, this.byRecipeIdSchema._id );
   }
 
   update ( body ) {
-    return validator.checkExistFields( body, this.mainSchema, this.byRecipeIdSchema._id );
+    return validator.existFields( body, this.mainSchema, this.byRecipeIdSchema._id );
   }
 
 

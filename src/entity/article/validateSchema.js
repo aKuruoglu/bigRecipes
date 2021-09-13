@@ -40,23 +40,15 @@ class ArticleCheck {
   }
 
   create ( body ) {
-    return validator.checkCreateEntity( body, this.mainSchema );
-  }
-
-  delete ( id ) {
-    return validator.checkExistId( id, this.byArticleIdSchema._id );
+    return validator.create( body, this.mainSchema );
   }
 
   update ( body ) {
-    return validator.checkExistFields( body, this.mainSchema, this.byArticleIdSchema._id );
-  }
-
-  existCategory ( categoryId ) {
-    return validator.checkExistId( categoryId, this.byCategoryIdSchema.categoryId );
+    return validator.existFields( body, this.mainSchema, this.byArticleIdSchema._id );
   }
 
   existId ( _id ) {
-    return validator.checkExistId( _id, this.byArticleIdSchema._id );
+    return validator.existId( _id, this.byArticleIdSchema._id );
   }
 }
 
