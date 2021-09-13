@@ -32,8 +32,7 @@ restify.server.del( '/article/:_id', restify.version( [
   {
     version: '0.0.1',
     handler: async ( req, res ) => {
-      await ArticleControl.remove( req.params );
-      res.send( 200, { message: 'Successfully deleted' } );
+      res.send( 200, await ArticleControl.remove( req.params ));
     },
   },
 ] ) );
@@ -42,7 +41,7 @@ restify.server.put( '/article/:_id', restify.version( [
   {
     version: '0.0.1',
     handler: async ( req, res ) => {
-      res.send( 200, await ArticleControl.update( { ...req.body, ...req.params } ) );
+      res.send( 200, await ArticleControl.update(req.params, req.body) );
     },
   },
 ] ) );
