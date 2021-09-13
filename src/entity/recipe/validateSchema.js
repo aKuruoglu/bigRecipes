@@ -1,6 +1,6 @@
 import validator from 'components/validator';
-import CategoryControl from 'entity/category/control';
-import RecipeControl from 'entity/recipe/control';
+import CategoryModel from 'entity/category/model';
+import RecipeModel from 'entity/recipe/model';
 
 class RecipeCheck {
   constructor () {
@@ -8,7 +8,7 @@ class RecipeCheck {
       _id: {
         type: 'objectID',
         custom: async ( value, errors ) => {
-          const res = await RecipeControl.checkExistRecipe( value );
+          const res = await RecipeModel.checkExist( value );
           if ( !res ) {
             errors.push( { type: 'noRecipe', actual: value, code: 404 } );
             return value;
@@ -22,7 +22,7 @@ class RecipeCheck {
       categoryId: {
         type: 'objectID',
         custom: async ( value, errors ) => {
-          const res = await CategoryControl.checkExistCategory( value );
+          const res = await CategoryModel.checkExist( value );
           if ( !res ) {
             errors.push( { type: 'noCategory', actual: value, code: 404 } );
             return value;
@@ -38,23 +38,23 @@ class RecipeCheck {
     };
   }
 
-  checkCreateBody ( body ) {
+  create ( body ) {
     return validator.checkCreateEntity( body, {
       ...this.mainSchema,
       ...this.byCategoryIdSchema,
     } );
   }
 
-  checkIsExist ( id ) {
+  existId ( id ) {
     return validator.checkExistId( id, this.byRecipeIdSchema._id );
   }
 
-  checkExistCategory ( categoryId ) {
+  existCategoryId ( categoryId ) {
     return validator.checkExistId( categoryId, this.byCategoryIdSchema.categoryId);
   }
 
-  checkUpdateRecipe ( body ) {
-    return validator.checkExistFields( body, this.mainSchema, this.byRecipeIdSchema );
+  update ( body ) {
+    return validator.checkExistFields( body, this.mainSchema, this.byRecipeIdSchema._id );
   }
 
 

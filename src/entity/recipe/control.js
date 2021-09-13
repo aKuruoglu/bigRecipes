@@ -2,40 +2,36 @@ import RecipeModel from 'entity/recipe/model';
 import RecipeCheck from 'entity/recipe/validateSchema';
 
 class RecipeControl {
-  async recipeCreate ( body = {} ) {
-    await RecipeCheck.checkCreateBody( body );
+  async create ( body = {} ) {
+    await RecipeCheck.create( body );
     return RecipeModel.create( body );
   }
 
-  async recipeDelete ( { _id } ) {
-    await RecipeCheck.checkIsExist( _id );
+  async delete ( { _id } ) {
+    await RecipeCheck.existId( _id );
     return RecipeModel.delete( _id );
   }
 
-  async getAllByCategory ( { categoryId } ) {
-    await RecipeCheck.checkExistCategory( categoryId );
-    return RecipeModel.getAllByCategory( categoryId );
+  async getByCategory ( { categoryId } ) {
+    await RecipeCheck.existCategoryId( categoryId );
+    return RecipeModel.getByCategory( categoryId );
   }
 
-  async getOneById ( { _id } ) {
-    await RecipeCheck.checkIsExist( _id );
-    return RecipeModel.getOneById( _id );
+  async getById ( { _id } ) {
+    await RecipeCheck.existId( _id );
+    return RecipeModel.getById( _id );
   }
 
   async updateCategory ( body ) {
     const { _id, categoryId } = body;
-    await RecipeCheck.checkIsExist( _id );
-    await RecipeCheck.checkExistCategory( categoryId );
-    return RecipeModel.updateCategory( body );
-  }
-
-  async updateRecipe ( body ) {
-    await RecipeCheck.checkUpdateRecipe( body );
+    await RecipeCheck.existId( _id );
+    await RecipeCheck.existCategoryId( categoryId );
     return RecipeModel.update( body );
   }
 
-  async checkExistRecipe ( _id ) {
-    return await RecipeModel.isExist( _id );
+  async update ( body ) {
+    await RecipeCheck.update( body );
+    return RecipeModel.update( body );
   }
 
 }
