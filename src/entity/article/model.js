@@ -1,46 +1,36 @@
 import db from 'components/db';
-import { cleanData } from 'components/utils';
+import QueryBuilder from '../../components/queryBuilder';
 
-const model = db.models.article;
-
-class ArticleModel {
-  async getByCategory ( id ) {
-    const articles = await model.find( { categoryId: id, isDeleted: false } ).lean();
-    return articles.map( item => cleanData( item ) );
+class ArticleModel extends QueryBuilder {
+  getByCategory ( categoryId ) {
+    return this.entityGetByCategory( categoryId );
   }
 
-  async getById ( id ) {
-    const article = await model.findOne( { _id: id, isDeleted: false } ).lean();
-    return cleanData( article );
+  getById ( _id ) {
+    return this.entityGetById( _id );
   }
 
-  async create ( body ) {
-    const article = await model.create( body );
-    return cleanData( article.toJSON() );
+  create ( body ) {
+    return this.entityCreate( body );
   }
 
-  async delete ( id ) {
-    await model.findOneAndUpdate( { _id: id, isDeleted: false }, { isDeleted: true } );
+  delete ( _id ) {
+    return this.entityDelete( _id );
   }
 
-  async update ( { id, ...body } ) {
-    const article = await model.findOneAndUpdate( { _id: id }, { ...body }, { returnOriginal: false } ).lean();
-    return cleanData( article );
+  update ( body ) {
+    const { title, description, mainText, _id } = body;
+    return this.entityUpdate( _id, { title, description, mainText } );
   }
 
-  async updateCategory ( { id, categoryId } ) {
-    const article = await model.findOneAndUpdate( {
-      _id: id,
-      isDeleted: false,
-    }, { categoryId }, { returnOriginal: false } ).lean();
-    return cleanData( article );
+  updateCategory ( body ) {
+    return this.entityUpdateCategory( body );
   }
 
-  async checkExist ( id ) {
-    const isExist = await model.findOne( { _id: id, isDeleted: false } ).exec();
-    return !!isExist;
+  checkExist ( id ) {
+    return this.entityExist( id );
   }
 
 }
 
-export default new ArticleModel();
+export default new ArticleModel( db.models.article );
