@@ -7,9 +7,9 @@ class RecipeControl {
     return RecipeModel.create( body );
   }
 
-  async recipeDelete ( { recipeId } ) {
-    await RecipeCheck.checkIsExist( recipeId );
-    return RecipeModel.delete( recipeId );
+  async recipeDelete ( { _id } ) {
+    await RecipeCheck.checkIsExist( _id );
+    return RecipeModel.delete( _id );
   }
 
   async getAllByCategory ( { categoryId } ) {
@@ -17,15 +17,16 @@ class RecipeControl {
     return RecipeModel.getAllByCategory( categoryId );
   }
 
-  async getOneById ( { recipeId } ) {
-    await RecipeCheck.checkIsExist( recipeId );
-    return RecipeModel.getOneById( recipeId );
+  async getOneById ( { _id } ) {
+    await RecipeCheck.checkIsExist( _id );
+    return RecipeModel.getOneById( _id );
   }
 
-  async updateCategory ( { categoryId, recipeId } ) {
-    await RecipeCheck.checkIsExist( recipeId );
+  async updateCategory ( body ) {
+    const { _id, categoryId } = body;
+    await RecipeCheck.checkIsExist( _id );
     await RecipeCheck.checkExistCategory( categoryId );
-    return RecipeModel.updateCategory( categoryId, recipeId );
+    return RecipeModel.updateCategory( body );
   }
 
   async updateRecipe ( body ) {
@@ -33,8 +34,8 @@ class RecipeControl {
     return RecipeModel.update( body );
   }
 
-  async checkExistRecipe ( id ) {
-    return await RecipeModel.isExist( id );
+  async checkExistRecipe ( _id ) {
+    return await RecipeModel.isExist( _id );
   }
 
 }

@@ -5,12 +5,13 @@ restify.server.post( '/recipe', restify.version( [
   {
     version: '0.0.1',
     handler: async ( req, res ) => {
+      console.log(req.body);
       res.send( 200, await RecipeControl.recipeCreate( req.body ) );
     },
   },
 ] ) );
 
-restify.server.del( '/recipe/:recipeId', restify.version( [
+restify.server.del( '/recipe/:_id', restify.version( [
   {
     version: '0.0.1',
     handler: async ( req, res ) => {
@@ -28,7 +29,7 @@ restify.server.get( '/recipe/category/:categoryId', restify.version( [
   },
 ] ) );
 
-restify.server.get( '/recipe/:recipeId', restify.version( [
+restify.server.get( '/recipe/:_id', restify.version( [
   {
     version: '0.0.1',
     handler: async ( req, res ) => {
@@ -37,7 +38,7 @@ restify.server.get( '/recipe/:recipeId', restify.version( [
   },
 ] ) );
 
-restify.server.put( '/recipe/:recipeId/change-category/:categoryId', restify.version( [
+restify.server.put( '/recipe/:_id/change-category/:categoryId', restify.version( [
   {
     version: '0.0.1',
     handler: async ( req, res ) => {
@@ -46,7 +47,7 @@ restify.server.put( '/recipe/:recipeId/change-category/:categoryId', restify.ver
   },
 ] ) );
 
-restify.server.put( '/recipe/:recipeId', restify.version( [
+restify.server.put( '/recipe/:_id', restify.version( [
   {
     version: '0.0.1',
     handler: async ( req, res ) => {

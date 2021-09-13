@@ -9,33 +9,40 @@ class RecipeModel {
     return cleanData( recipe.toJSON() );
   }
 
-  async delete ( recipeId ) {
-    const recipe = await model.findOneAndUpdate( { _id: recipeId }, { isDeleted: true } ).lean();
+  async delete ( _id ) {
+    const recipe = await model.findOneAndUpdate( { _id }, { isDeleted: true } ).lean();
     return cleanData( recipe );
   }
 
-  async getAllByCategory ( categoryId ) {
-    const recipes = await model.find( { categoryId, isDeleted: false } ).lean();
-    return recipes.map( item => cleanData( item ) );
+  getAllByCategory ( id ) {
+    return model.find( { categoryId: id, isDeleted: false }, {
+      isDeleted: 0,
+    } ).lean();
   }
 
-  async getOneById ( recipeId ) {
-    const recipe = await model.findOne( { _id: recipeId } ).lean();
+  async getOneById ( _id ) {
+    const recipe = await model.findOne( { _id, isDeleted: false } ).lean();
     return cleanData( recipe );
   }
 
-  async updateCategory ( categoryId, recipeId ) {
-    const recipe = await model.findOneAndUpdate( { _id: recipeId }, { categoryId } ).lean();
+  async updateCategory ( { categoryId, _id } ) {
+    const recipe = await model.findOneAndUpdate( {
+      _id,
+      isDeleted: false,
+    }, { categoryId }, { returnOriginal: false } ).lean();
     return cleanData( recipe );
   }
 
-  async update ( { recipeId, ...body } = {} ) {
-    const recipe = await model.findOneAndUpdate( { _id: recipeId }, { ...body }, { returnOriginal: false } ).lean();
+  async update ( { _id, ...body } = {} ) {
+    const recipe = await model.findOneAndUpdate( {
+      _id,
+      isDeleted: false,
+    }, { ...body }, { returnOriginal: false } ).lean();
     return cleanData( recipe );
   }
 
-  async isExist ( id ) {
-    const isExist = await model.findOne( { _id: id, isDeleted: false } ).lean();
+  async isExist ( _id ) {
+    const isExist = await model.findOne( { _id, isDeleted: false } ).lean();
     return !!isExist;
   }
 }

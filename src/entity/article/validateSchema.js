@@ -51,8 +51,8 @@ class ArticleCheck {
     return validator.checkExistFields( body, this.mainSchema, this.byArticleIdSchema );
   }
 
-  checkExistCategory ( id ) {
-    return validator.checkExistId( id, this.byCategoryIdSchema );
+  checkExistCategory ( categoryId ) {
+    return validator.checkExistId( categoryId, this.byCategoryIdSchema );
   }
 
   checkExist ( id ) {

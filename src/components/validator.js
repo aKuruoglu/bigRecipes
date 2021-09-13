@@ -34,12 +34,12 @@ class MainValidate extends Validator {
     };
   }
 
-  async checkExistId ( id, schema ) {
+  async checkExistId ( _id, schema ) {
     const check = await validator.compaileSchema( {
-      ...schema,
+      _id: schema,
       $$async: true,
     } );
-    return check( { id } );
+    return check( { _id } );
   }
 
   async checkCreateEntity ( body, schema ) {

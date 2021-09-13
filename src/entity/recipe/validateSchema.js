@@ -5,7 +5,7 @@ import RecipeControl from 'entity/recipe/control';
 class RecipeCheck {
   constructor () {
     this.byRecipeIdSchema = {
-      recipeId: {
+      _id: {
         type: 'objectID',
         custom: async ( value, errors ) => {
           const res = await RecipeControl.checkExistRecipe( value );
@@ -45,12 +45,12 @@ class RecipeCheck {
     } );
   }
 
-  checkIsExist ( recipeId ) {
-    return validator.checkExistId( recipeId, this.byRecipeIdSchema );
+  checkIsExist ( id ) {
+    return validator.checkExistId( id, this.byRecipeIdSchema._id );
   }
 
   checkExistCategory ( categoryId ) {
-    return validator.checkExistId( categoryId, this.byCategoryIdSchema );
+    return validator.checkExistId( categoryId, this.byCategoryIdSchema.categoryId);
   }
 
   checkUpdateRecipe ( body ) {
