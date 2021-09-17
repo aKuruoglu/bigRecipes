@@ -50,9 +50,10 @@ restify.server.put( '/recipe/:_id', restify.version( [
   {
     version: '0.0.1',
     handler: async ( req, res ) => {
-      res.send( 200, await RecipeControl.update( { ...req.body, ...req.params } ) );
+      res.send( 200, await RecipeControl.update( req.params, req.body ) );
     },
   },
 ] ) );
+
 
 

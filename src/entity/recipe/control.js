@@ -1,8 +1,11 @@
 import RecipeModel from 'entity/recipe/model';
 import RecipeCheck from 'entity/recipe/validateSchema';
+import CategoryCheck from 'entity/category/validateSchema';
 
 class RecipeControl {
   async create ( body = {} ) {
+    const { categoryId } = body;
+    await CategoryCheck.existId( categoryId );
     await RecipeCheck.create( body );
     return RecipeModel.create( body );
   }
@@ -13,7 +16,7 @@ class RecipeControl {
   }
 
   async getByCategory ( { categoryId } ) {
-    await RecipeCheck.existCategoryId( categoryId );
+    await CategoryCheck.existId( categoryId );
     return RecipeModel.getByCategory( categoryId );
   }
 
@@ -22,16 +25,15 @@ class RecipeControl {
     return RecipeModel.getById( _id );
   }
 
-  async updateCategory ( body ) {
-    const { _id, categoryId } = body;
+  async updateCategory ( { _id, categoryId } = {} ) {
     await RecipeCheck.existId( _id );
-    await RecipeCheck.existCategoryId( categoryId );
-    return RecipeModel.update( body );
+    await CategoryCheck.existId( categoryId );
+    return RecipeModel.updateCategory( { _id, categoryId } );
   }
 
-  async update ( body ) {
-    await RecipeCheck.update( body );
-    return RecipeModel.update( body );
+  async update ( _id, body ) {
+    await RecipeCheck.update( { _id, ...body } );
+    return RecipeModel.update( _id, body );
   }
 
 }

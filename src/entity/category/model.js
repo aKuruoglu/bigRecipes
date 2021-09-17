@@ -1,20 +1,57 @@
 import db from 'components/db';
+import QueryBuilder from 'components/dbExtendsModels/queryBuilder';
+import { Types } from 'mongoose';
 
-const model = db.models.category;
-
-class CategoryModel {
-  create ({ name, parentCategoryId }) {
-    return model.create({ name, parentCategoryId });
+class CategoryModel extends QueryBuilder {
+  async delete ( _id ) {
+    const { parentCategoryId } = await super.getById( _id );
+    await this.model.updateMany( { parentCategoryId: _id }, { parentCategoryId } );
+    return super.delete( _id );
   }
 
-  delete ({ id } ) {
-    return model.find({ id } ).deleteOne();
-  }
+  getCategory ( _id ) {
+    return this.model.aggregate( [
+      { $match: { _id: Types.ObjectId( _id ) } },
+      {
+        $lookup:
+          {
+            from: 'articles',
+            localField: '_id',
+            foreignField: 'categoryId',
+            pipeline: [
+              { $match: { isDeleted: false } },
+              { $count: 'count' },
+            ],
+            as: 'articles',
+          },
+      },
+      { $unwind: '$articles' },
+      {
+        $lookup:
+          {
+            from: 'recipes',
+            localField: '_id',
+            foreignField: 'categoryId',
+            pipeline: [
+              { $match: { isDeleted: false } },
+              { $count: 'count' },
+            ],
+            as: 'recipes',
+          },
+      },
+      { $unwind: '$recipes' },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          parentCategoryId: 1,
+          recipesCount: '$recipes.count',
+          articlesCount: '$articles.count',
+        },
+      },
+    ] );
 
-  async checkExist ( id ) {
-    const isExist = await model.findOne({ _id: id } ).exec();
-    return !!isExist;
   }
 }
 
-export default new CategoryModel();
+export default new CategoryModel( db.models.category );

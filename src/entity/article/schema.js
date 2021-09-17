@@ -1,7 +1,9 @@
 import { Schema } from 'mongoose';
-import category from '../category/schema';
+import idValidator from 'mongoose-id-validator';
 
-const article = new Schema({
+import db from 'components/db';
+
+const article = new Schema( {
   title: {
     type: String,
     required: true,
@@ -16,7 +18,7 @@ const article = new Schema({
   },
   categoryId: {
     type: Schema.ObjectId,
-    $ref: [category],
+    ref: 'category',
     required: true,
     index: true,
   },
@@ -27,8 +29,13 @@ const article = new Schema({
 }, {
   typePojoToMixed: false,
   versionKey: false,
-});
+} );
 
-article.index({  title: 1, description: 1, isDeleted: 1 });
+article.plugin( idValidator, {
+  connection: db.db,
+  allowDuplicates: true,
+} );
+
+article.index( { title: 1, description: 1, isDeleted: 1 } );
 
 export default article;

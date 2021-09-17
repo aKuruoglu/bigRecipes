@@ -9,7 +9,13 @@ const category = new Schema({
   parentCategoryId: {
     type: Schema.ObjectId,
     index: true,
+    default: null,
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
+
 }, {
   typePojoToMixed: false,
   versionKey: false,
