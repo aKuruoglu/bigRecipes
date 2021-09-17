@@ -11,6 +11,11 @@ const category = new Schema({
     index: true,
     default: null,
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
+
 }, {
   typePojoToMixed: false,
   versionKey: false,

@@ -4,6 +4,8 @@ import CategoryCheck from 'entity/category/validateSchema';
 
 class RecipeControl {
   async create ( body = {} ) {
+    const { categoryId } = body;
+    await CategoryCheck.existId( categoryId );
     await RecipeCheck.create( body );
     return RecipeModel.create( body );
   }

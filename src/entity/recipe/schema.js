@@ -1,5 +1,7 @@
 import { Schema } from 'mongoose';
-import category from '../category/schema';
+import idValidator from 'mongoose-id-validator';
+
+import db from '../../components/db';
 
 const recipe = new Schema( {
   title: {
@@ -12,7 +14,7 @@ const recipe = new Schema( {
   },
   categoryId: {
     type: Schema.ObjectId,
-    $ref: [category],
+    ref: 'category',
     required: true,
     index: true,
   },
@@ -25,6 +27,10 @@ const recipe = new Schema( {
   versionKey: false,
 } );
 
+recipe.plugin( idValidator, {
+  connection: db.db,
+  allowDuplicates: true,
+} );
 recipe.index( { title: 1 } );
 
 export default recipe;

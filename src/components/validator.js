@@ -2,6 +2,7 @@ import Validator from 'fastest-validator';
 import { mongo } from 'mongoose';
 import { keys, isBoolean, omit, has } from 'lodash';
 import ErrorsHandler from 'components/errorsHandler';
+import CategoryModel from 'entity/category/model';
 
 class MainValidate extends Validator {
   async compaileSchema ( schema ) {
@@ -67,6 +68,34 @@ class MainValidate extends Validator {
       $$async: true,
     } );
     return check( body );
+  }
+
+  async possibleChangeParent ( { _id }, { parentCategoryId } ) {
+    if ( !parentCategoryId ) {
+      return;
+    }
+
+    const categories = await CategoryModel.getAll();
+    const categoriesMap = new Map( categories.map( ( item ) => [String( item._id ), item] ) );
+    let parent;
+    let checkId = String( parentCategoryId );
+    let currentId = String( _id );
+
+    while ( checkId ) {
+      if ( checkId === currentId ) {
+        break;
+      }
+
+      parent = categoriesMap.get( checkId );
+      checkId = String( parent.parentCategoryId );
+    }
+
+    if ( checkId ) {
+      const response = {
+        message: 'Sorry you cannot change to the given parent category as it is a child category',
+      };
+      ErrorsHandler.throw( response, 400 );
+    }
   }
 }
 

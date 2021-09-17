@@ -1,6 +1,6 @@
-import { cleanData } from 'components/utils';
+import { cleanData } from '../utils';
 
-class QueryBuilder {
+class Query {
   constructor ( model ) {
     this.model = model;
   }
@@ -17,39 +17,9 @@ class QueryBuilder {
     } ).lean();
   }
 
-  deleteAllByCategoryId ( categoryId ) {
-    return this.model.updateMany( { categoryId }, { isDeleted: true } );
-  }
-
-  getByCategory ( categoryId ) {
-    return this.model.find( {
-      categoryId,
-      isDeleted: false,
-    },
-    {
-      isDeleted: 0,
-    } ).lean();
-  }
-
   getById ( _id ) {
     return this.model.findOne( { _id, isDeleted: false }, {
       isDeleted: 0,
-    } ).lean();
-  }
-
-  updateCategory ( { categoryId, _id } ) {
-    return this.model.findOneAndUpdate( {
-      _id,
-      isDeleted: false,
-    },
-    {
-      categoryId,
-    },
-    {
-      returnOriginal: false,
-      fields: {
-        isDeleted: 0,
-      },
     } ).lean();
   }
 
@@ -67,12 +37,11 @@ class QueryBuilder {
     } ).lean();
   }
 
-  async checkExist ( _id ) {
-    const existEntity = await this.getById( _id ).exec();
+
+  async isExist ( _id ) {
+    const existEntity = await this.getById( _id );
     return !!existEntity;
   }
-
-
 }
 
-export default QueryBuilder;
+export default Query;

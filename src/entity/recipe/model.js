@@ -1,5 +1,5 @@
 import db from 'components/db';
-import QueryBuilder from 'components/queryBuilder';
+import QueryBuilder from 'components/dbExtendsModels/queryBuilder';
 
 class RecipeModel extends QueryBuilder {
   create ( { title, description, categoryId = null } = {} ) {

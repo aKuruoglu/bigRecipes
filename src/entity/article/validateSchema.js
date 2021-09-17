@@ -1,5 +1,4 @@
 import validator from 'components/validator';
-import CategoryModel from 'entity/category/model';
 import ArticleModel from 'entity/article/model';
 
 class ArticleCheck {
@@ -8,23 +7,9 @@ class ArticleCheck {
       _id: {
         type: 'objectID',
         custom: async ( value, errors ) => {
-          const res = await ArticleModel.checkExist( value );
+          const res = await ArticleModel.isExist( value );
           if ( !res ) {
             errors.push( { type: 'noArticle', actual: value, code: 404 } );
-            return value;
-          }
-          return value;
-        },
-      },
-    };
-
-    this.byCategoryIdSchema = {
-      categoryId: {
-        type: 'objectID',
-        custom: async ( value, errors ) => {
-          const res = await CategoryModel.checkExist( value );
-          if ( !res ) {
-            errors.push( { type: 'noCategory', actual: value, code: 404 } );
             return value;
           }
           return value;
