@@ -9,8 +9,8 @@ class CategoryModel extends QueryBuilder {
     return super.delete( _id );
   }
 
-  getCategory ( _id ) {
-    return this.model.aggregate( [
+  async getCategory ( _id ) {
+    const res = await this.model.aggregate( [
       { $match: { _id: Types.ObjectId( _id ) } },
       {
         $lookup:
@@ -25,7 +25,12 @@ class CategoryModel extends QueryBuilder {
             as: 'articles',
           },
       },
-      { $unwind: '$articles' },
+      {
+        $unwind: {
+          path: '$articles',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
       {
         $lookup:
           {
@@ -39,7 +44,7 @@ class CategoryModel extends QueryBuilder {
             as: 'recipes',
           },
       },
-      { $unwind: '$recipes' },
+      { $unwind: { path: '$recipes', preserveNullAndEmptyArrays: true } },
       {
         $project: {
           _id: 1,
@@ -51,6 +56,15 @@ class CategoryModel extends QueryBuilder {
       },
     ] );
 
+    if (!res || !res.length) {
+      return null;
+    }
+
+    return {
+      recipesCount: 0,
+      articlesCount: 0,
+      ...res[0],
+    };
   }
 }
 
