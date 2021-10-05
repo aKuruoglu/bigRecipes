@@ -28,6 +28,15 @@ restify.server.get( '/recipe/category/:categoryId', restify.version( [
   },
 ] ) );
 
+restify.server.get( '/recipe/:page/:limit', restify.version( [
+  {
+    version: '0.0.1',
+    handler: async ( req, res ) => {
+      res.send( 200, await RecipeControl.getAll(req.params) );
+    },
+  },
+] ) );
+
 restify.server.get( '/recipe/:_id', restify.version( [
   {
     version: '0.0.1',

@@ -3,37 +3,46 @@ import RecipeCheck from 'entity/recipe/validateSchema';
 import CategoryCheck from 'entity/category/validateSchema';
 
 class RecipeControl {
-  async create ( body = {} ) {
+  async create (body = {}) {
     const { categoryId } = body;
-    await CategoryCheck.existId( categoryId );
-    await RecipeCheck.create( body );
-    return RecipeModel.create( body );
+    await CategoryCheck.existId(categoryId);
+    await RecipeCheck.create(body);
+    return RecipeModel.create(body);
   }
 
-  async delete ( { _id } ) {
-    await RecipeCheck.existId( _id );
-    return RecipeModel.delete( _id );
+  async delete ({ _id }) {
+    await RecipeCheck.existId(_id);
+    return RecipeModel.delete(_id);
   }
 
-  async getByCategory ( { categoryId } ) {
-    await CategoryCheck.existId( categoryId );
-    return RecipeModel.getByCategory( categoryId );
+  async getByCategory ({ categoryId }) {
+    await CategoryCheck.existId(categoryId);
+    return RecipeModel.getByCategory(categoryId);
   }
 
-  async getById ( { _id } ) {
-    await RecipeCheck.existId( _id );
-    return RecipeModel.getById( _id );
+  async getAll ({ page, limit }) {
+    const count = await RecipeModel.getCountEntity();
+    const entities = await RecipeModel.getAllOfEntity(+page, +limit);
+    return {
+      entities,
+      total: count,
+    };
   }
 
-  async updateCategory ( { _id, categoryId } = {} ) {
-    await RecipeCheck.existId( _id );
-    await CategoryCheck.existId( categoryId );
-    return RecipeModel.updateCategory( { _id, categoryId } );
+  async getById ({ _id }) {
+    await RecipeCheck.existId(_id);
+    return RecipeModel.getById(_id);
   }
 
-  async update ( _id, body ) {
-    await RecipeCheck.update( { _id, ...body } );
-    return RecipeModel.update( _id, body );
+  async updateCategory ({ _id, categoryId } = {}) {
+    await RecipeCheck.existId(_id);
+    await CategoryCheck.existId(categoryId);
+    return RecipeModel.updateCategory({ _id, categoryId });
+  }
+
+  async update (_id, body) {
+    await RecipeCheck.update({ _id, ...body });
+    return RecipeModel.update(_id, body);
   }
 
 }
