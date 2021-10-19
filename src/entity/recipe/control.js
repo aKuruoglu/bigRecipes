@@ -15,9 +15,14 @@ class RecipeControl {
     return RecipeModel.delete(_id);
   }
 
-  async getByCategory ({ categoryId }) {
+  async getByCategory ({ categoryId, page, limit  }) {
     await CategoryCheck.existId(categoryId);
-    return RecipeModel.getByCategory(categoryId);
+    const count = await RecipeModel.getCountEntityByCategory(categoryId);
+    const entities = await RecipeModel.getByCategory(categoryId, +page, +limit);
+    return {
+      entities,
+      total: count,
+    };
   }
 
   async getAll ({ page, limit }) {

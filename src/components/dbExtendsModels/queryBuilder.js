@@ -10,14 +10,27 @@ class QueryBuilder extends Query {
     return this.model.updateMany( { categoryId }, { isDeleted: true } );
   }
 
-  getByCategory ( categoryId ) {
+  getCountEntityByCategory (categoryId) {
+    return this.model.count({
+      isDeleted: false,
+      categoryId,
+    });
+  }
+
+  getByCategory ( categoryId, page = 0, limit ) {
+    const skip = page * limit;
     return this.model.find( {
       categoryId,
       isDeleted: false,
     },
     {
       isDeleted: 0,
-    } ).lean();
+    },
+    {
+      skip,
+      limit,
+    },
+    );
   }
 
   updateCategory ( { categoryId, _id } ) {

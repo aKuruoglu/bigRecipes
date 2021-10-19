@@ -9,9 +9,23 @@ class ArticleControl {
     return ArticleModel.getById( _id );
   }
 
-  async getByCategory ( { categoryId } = {} ) {
+  async getAll ({ page, limit }) {
+    const count = await ArticleModel.getCountEntity();
+    const entities = await ArticleModel.getAllOfEntity(+page, +limit);
+    return {
+      entities,
+      total: count,
+    };
+  }
+
+  async getByCategory ( { categoryId, page, limit } = {} ) {
     await CategoryCheck.existId( categoryId );
-    return ArticleModel.getByCategory( categoryId );
+    const count = await ArticleModel.getCountEntityByCategory(categoryId);
+    const entities = await ArticleModel.getByCategory(categoryId, +page, +limit);
+    return {
+      entities,
+      total: count,
+    };
   }
 
   async add ( body = {} ) {

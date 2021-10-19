@@ -78,7 +78,7 @@ class MainValidate extends Validator {
     const categories = await CategoryModel.getAll();
     const categoriesMap = new Map( categories.map( ( item ) => [String( item._id ), item] ) );
     let parent;
-    let checkId = String( parentCategoryId );
+    let checkId = parentCategoryId;
     let currentId = String( _id );
 
     while ( checkId ) {
@@ -87,7 +87,7 @@ class MainValidate extends Validator {
       }
 
       parent = categoriesMap.get( checkId );
-      checkId = String( parent.parentCategoryId );
+      checkId = parent.parentCategoryId ? parent.parentCategoryId.toString() : parent.parentCategoryId;
     }
 
     if ( checkId ) {

@@ -19,7 +19,7 @@ restify.server.del( '/recipe/:_id', restify.version( [
   },
 ] ) );
 
-restify.server.get( '/recipe/category/:categoryId', restify.version( [
+restify.server.get( '/recipe/category/:categoryId/:page/:limit', restify.version( [
   {
     version: '0.0.1',
     handler: async ( req, res ) => {
