@@ -10,6 +10,7 @@ class ArticleControl {
   }
 
   async getAll ({ page, limit }) {
+    await ArticleCheck.paginate(page, limit);
     const count = await ArticleModel.getCountEntity();
     const entities = await ArticleModel.getAllOfEntity(+page, +limit);
     return {
@@ -20,6 +21,7 @@ class ArticleControl {
 
   async getByCategory ( { categoryId, page, limit } = {} ) {
     await CategoryCheck.existId( categoryId );
+    await ArticleCheck.paginate(page, limit);
     const count = await ArticleModel.getCountEntityByCategory(categoryId);
     const entities = await ArticleModel.getByCategory(categoryId, +page, +limit);
     return {

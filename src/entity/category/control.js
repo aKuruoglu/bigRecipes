@@ -5,6 +5,9 @@ import RecipeModel from 'entity/recipe/model';
 
 class CategoryControl {
   async create ( { name, parentCategoryId = null } = {} ) {
+    if (parentCategoryId) {
+      await CategoryCheck.existId( parentCategoryId );
+    }
     await CategoryCheck.create( { name, parentCategoryId } );
     return CategoryModel.create( { name, parentCategoryId } );
   }

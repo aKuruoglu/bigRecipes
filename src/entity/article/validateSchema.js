@@ -24,6 +24,10 @@ class ArticleCheck {
     };
   }
 
+  paginate ( page, limit ) {
+    return validator.paginate( page, limit );
+  }
+
   create ( body ) {
     return validator.create( body, this.mainSchema );
   }

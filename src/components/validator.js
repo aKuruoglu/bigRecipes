@@ -97,6 +97,21 @@ class MainValidate extends Validator {
       ErrorsHandler.throw( response, 400 );
     }
   }
+
+  paginate (page, limit) {
+    if (page < 0) {
+      const response = {
+        message: 'Page cannot be less than 0',
+      };
+      ErrorsHandler.throw(response, 400 );
+    }
+    if (limit < 1) {
+      const response = {
+        message: 'Limit cannot be less than 1',
+      };
+      ErrorsHandler.throw(response, 400 );
+    }
+  }
 }
 
 const validator = new MainValidate( {
@@ -109,6 +124,7 @@ const validator = new MainValidate( {
   messages: {
     noCategory: 'There is no such category',
     noArticle: 'There is no such article',
+    noRecipe: 'There is no such recipe',
   },
 } );
 

@@ -7,6 +7,7 @@ import { cloneDeep } from 'lodash';
 
 import logger from 'components/logger';
 import crawler from 'utils/crawler';
+import ErrorsHandler from './errorsHandler';
 
 class RestifyWrap {
   constructor () {
@@ -32,10 +33,16 @@ class RestifyWrap {
       try {
         await middleware(req, res, next);
       } catch (e) {
+        if(e instanceof ErrorsHandler) {
+          logger.error(e.stack);
+          logger.error(e.statusCode);
+          return res.send(+e.statusCode, e.errors);
+        }
+
         if(e instanceof Error) {
           logger.error(e.stack);
           logger.error(e.code);
-          return res.send(+e.code, e.errors);
+          return res.send(500, e.stack);
         }
 
         logger.error(e);

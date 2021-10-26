@@ -2,10 +2,10 @@ import { isArray, isString } from 'lodash';
 
 
 class ErrorsHandler extends Error{
-  constructor (message, { code = 400, type, errors } = {}) {
+  constructor (message, { statusCode = 400, type, errors } = {}) {
     super(message);
     this.type = type;
-    this.code = code;
+    this.statusCode = statusCode;
     this.errors = errors;
   }
 
@@ -17,7 +17,7 @@ class ErrorsHandler extends Error{
     return item.message;
   }
 
-  static make (errors, code = 400, type) {
+  static make (errors, statusCode = 400, type) {
     let message, data = errors;
     if(isArray(errors)) {
       message = errors.map(item => ErrorsHandler.itemHandler(item));
@@ -25,11 +25,11 @@ class ErrorsHandler extends Error{
       message = [ErrorsHandler.itemHandler(errors)];
       data = [errors];
     }
-    return new ErrorsHandler(message, { code, type, errors: data });
+    return new ErrorsHandler(message, { statusCode, type, errors: data });
   }
 
-  static throw (errors, code = 400, type) {
-    throw ErrorsHandler.make(errors, code, type);
+  static throw (errors, statusCode = 400, type) {
+    throw ErrorsHandler.make(errors, statusCode, type);
   }
 
 }

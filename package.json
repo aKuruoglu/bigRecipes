@@ -5,7 +5,9 @@
   "scripts": {
     "postinstall": "husky install",
     "build": "babel 'src/' -d 'dist/' --copy-files",
-    "start": "NODE_ENV=development nodemon --exec babel-node src/index.js"
+    "start": "NODE_ENV=development nodemon --exec babel-node src/index.js",
+    "test": "NODE_ENV=test mocha --require babel-polyfill --require @babel/register --timeout 5000 test/** --exit",
+    "coverage": "nyc yarn test"
   },
   "author": "Alex",
   "license": "ISC",
@@ -24,11 +26,16 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "@babel/cli": "^7.14.8",
-    "@babel/core": "^7.15.0",
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.8",
     "@babel/node": "^7.14.9",
     "@babel/plugin-transform-arrow-functions": "^7.14.5",
-    "@babel/preset-env": "^7.15.0",
+    "@babel/plugin-transform-runtime": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "@babel/register": "^7.15.3",
+    "@babel/runtime": "^7.15.4",
+    "babel-polyfill": "^6.26.0",
+    "babel-register": "^6.26.0",
     "chai": "^4.3.4",
     "chai-http": "^4.3.0",
     "eslint": "^7.32.0",
@@ -38,8 +45,9 @@
     "eslint-plugin-standard": "^5.0.0",
     "husky": "^7.0.2",
     "lint-staged": "^11.1.2",
-    "mocha": "^9.1.1",
-    "nodemon": "^2.0.12"
+    "mocha": "^9.1.3",
+    "nodemon": "^2.0.12",
+    "nyc": "^15.1.0"
   },
   "lint-staged": {
     "*.js": [

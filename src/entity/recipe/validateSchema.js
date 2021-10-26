@@ -29,6 +29,10 @@ class RecipeCheck {
     } );
   }
 
+  paginate ( page, limit ) {
+    return validator.paginate( page, limit );
+  }
+
   existId ( id ) {
     return validator.existId( id, this.byRecipeIdSchema._id );
   }

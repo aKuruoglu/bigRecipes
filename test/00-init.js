@@ -10,4 +10,6 @@ process.env.NODE_PATH = [
 
 Module._initPaths();
 
-require('server.js').default();
+before(async () => {
+  await require('server.js').default();
+});

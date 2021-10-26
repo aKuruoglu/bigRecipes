@@ -17,6 +17,7 @@ class RecipeControl {
 
   async getByCategory ({ categoryId, page, limit  }) {
     await CategoryCheck.existId(categoryId);
+    await RecipeCheck.paginate(page, limit);
     const count = await RecipeModel.getCountEntityByCategory(categoryId);
     const entities = await RecipeModel.getByCategory(categoryId, +page, +limit);
     return {
@@ -26,6 +27,7 @@ class RecipeControl {
   }
 
   async getAll ({ page, limit }) {
+    await RecipeCheck.paginate(page, limit);
     const count = await RecipeModel.getCountEntity();
     const entities = await RecipeModel.getAllOfEntity(+page, +limit);
     return {
@@ -45,7 +47,7 @@ class RecipeControl {
     return RecipeModel.updateCategory({ _id, categoryId });
   }
 
-  async update (_id, body) {
+  async update ({ _id } = {}, body = {}) {
     await RecipeCheck.update({ _id, ...body });
     return RecipeModel.update(_id, body);
   }
