@@ -1,5 +1,6 @@
 import restify from 'components/restify';
 import CategoryControl from 'entity/category/control';
+import CategoryWithCountControl from 'entity/categoryWithCount/control';
 
 restify.server.post( '/category', restify.version( [
   {
@@ -29,11 +30,20 @@ restify.server.get( '/category', restify.version( [
   },
 ] ) );
 
-restify.server.get( '/category/:_id', restify.version( [
+restify.server.get( '/category-count/:_id', restify.version( [
   {
     version: '0.0.1',
     handler: async ( req, res ) => {
       res.send( 200, await CategoryControl.getById( req.params ) );
+    },
+  },
+] ) );
+
+restify.server.get( '/category/:_id', restify.version( [
+  {
+    version: '0.0.1',
+    handler: async ( req, res ) => {
+      res.send( 200, await CategoryWithCountControl.getById( req.params ) );
     },
   },
 ] ) );

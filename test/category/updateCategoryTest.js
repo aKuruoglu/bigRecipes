@@ -16,37 +16,43 @@ describe('Updating category', () => {
       parentCategoryId: null,
     };
 
-    const categoryModel = await require('entity/category/model').default;
+    const categoryControl = await require('entity/category/control').default;
 
-    categoryFirst = await categoryModel.create(categoryObj);
+    categoryFirst = await categoryControl.create(categoryObj);
     categoryFirst._id = categoryFirst._id.toString();
 
     const categoryObjSecond = {
       name: 'TestCategory',
       parentCategoryId: categoryFirst._id,
     };
-    categorySecond = await categoryModel.create(categoryObjSecond);
+    categorySecond = await categoryControl.create(categoryObjSecond);
     categorySecond._id = categorySecond._id.toString();
 
     const categoryObjThird = {
       name: 'TestCategory',
       parentCategoryId: categorySecond._id,
     };
-    categoryThird = await categoryModel.create(categoryObjThird);
+    categoryThird = await categoryControl.create(categoryObjThird);
     categoryThird._id = categoryThird._id.toString();
 
-    categoryFourth = await categoryModel.create(categoryObjThird);
+    categoryFourth = await categoryControl.create(categoryObjThird);
     categoryFourth._id = categoryFourth._id.toString();
-    await categoryModel.delete(categoryFourth._id);
+    await categoryControl.delete({ _id: categoryFourth._id });
   });
 
   after(async () => {
     const categoryModel = await require('entity/category/model').default;
+    const categoryWithCountModel = await require('entity/categoryWithCount/model').default;
 
     await categoryModel.model.deleteOne({ _id: categoryFirst._id });
     await categoryModel.model.deleteOne({ _id: categorySecond._id });
     await categoryModel.model.deleteOne({ _id: categoryThird._id });
     await categoryModel.model.deleteOne({ _id: categoryFourth._id });
+
+    await categoryWithCountModel.model.deleteOne({ _id: categoryFirst._id });
+    await categoryWithCountModel.model.deleteOne({ _id: categorySecond._id });
+    await categoryWithCountModel.model.deleteOne({ _id: categoryThird._id });
+    await categoryWithCountModel.model.deleteOne({ _id: categoryFourth._id });
   });
 
   describe('Update category success', () => {
@@ -65,6 +71,11 @@ describe('Updating category', () => {
       expect(name).to.equal(toUpdateObj.name);
       expect(parentCategoryId).to.equal(toUpdateObj.parentCategoryId);
       expect(_id).to.equal(toUpdateObj._id.toString());
+
+      const categoryWithCountModel = await require('entity/categoryWithCount/model').default;
+      const categoryCount = await categoryWithCountModel.model.find({ _id: toUpdateObj._id });
+      expect(categoryCount[0].name).to.equal(toUpdateObj.name);
+      expect(categoryCount[0].parentCategoryId).to.equal(toUpdateObj.parentCategoryId);
     });
 
     it('it should update parent category',  async () => {

@@ -2,8 +2,8 @@ import db from 'components/db';
 import QueryBuilder from '../../components/dbExtendsModels/queryBuilder';
 
 class ArticleModel extends QueryBuilder {
-  create ( { title, description, mainText, categoryId = null } = {} ) {
-    return super.create( { title, description, mainText, categoryId } );
+  async create ( { title, description, mainText, categoryId = null } = {} ) {
+    return await super.create({ title, description, mainText, categoryId });
   }
 
   update ( _id, { title, description, mainText } = {} ) {

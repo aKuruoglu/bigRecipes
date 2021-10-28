@@ -15,8 +15,8 @@ describe('Getting category by id', () => {
       parentCategoryId: null,
     };
 
-    const categoryModel = await require('entity/category/model').default;
-    category = await categoryModel.create(categoryObj);
+    const categoryControl = await require('entity/category/control').default;
+    category = await categoryControl.create(categoryObj);
     category._id = category._id.toString();
 
     const articleObj = {
@@ -25,24 +25,26 @@ describe('Getting category by id', () => {
       mainText: 'rewerwer',
       categoryId: category._id,
     };
-    const articleModel = await require('entity/article/model').default;
-    article = await articleModel.create(articleObj);
+    const articleControl = await require('entity/article/control').default;
+    article = await articleControl.add(articleObj);
 
     const recipeObj = {
       title: 'wewer',
       description: 'rewrew',
       categoryId: category._id,
     };
-    const recipeModel = await require('entity/recipe/model').default;
-    recipe = await recipeModel.create(recipeObj);
+    const recipeControl = await require('entity/recipe/control').default;
+    recipe = await recipeControl.create(recipeObj);
   });
 
   after(async () => {
     const categoryModel = await require('entity/category/model').default;
+    const categoryWithCount = await require('entity/categoryWithCount/model').default;
     const articleModel = await require('entity/article/model').default;
     const recipeModel = await require('entity/recipe/model').default;
 
     await categoryModel.model.deleteOne({ _id: category._id });
+    await categoryWithCount.model.deleteOne({ _id: category._id });
     await articleModel.model.deleteOne({ _id: article._id });
     await recipeModel.model.deleteOne({ _id: recipe._id });
   });

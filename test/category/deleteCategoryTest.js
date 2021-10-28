@@ -20,23 +20,23 @@ describe('Deleting category', () => {
       parentCategoryId: null,
     };
 
-    const categoryModel = await require('entity/category/model').default;
+    const categoryControl = await require('entity/category/control').default;
 
-    categoryFirst = await categoryModel.create(first);
+    categoryFirst = await categoryControl.create(first);
     categoryFirst._id = categoryFirst._id.toString();
 
     const second = {
       name: 'TestCategory',
       parentCategoryId: categoryFirst._id,
     };
-    categorySecond = await categoryModel.create(second);
+    categorySecond = await categoryControl.create(second);
     categorySecond._id = categorySecond._id.toString();
 
     const third = {
       name: 'TestCategory',
       parentCategoryId: categorySecond._id,
     };
-    categoryThird = await categoryModel.create(third);
+    categoryThird = await categoryControl.create(third);
     categoryThird._id = categoryThird._id.toString();
 
     const recipeModel = await require('entity/recipe/model').default;
@@ -59,7 +59,7 @@ describe('Deleting category', () => {
     recipe2 = await recipeModel.create(recipeObj2);
     recipe3 = await recipeModel.create(recipeObj3);
 
-    const articleModel = await require('entity/article/model').default;
+    const articleControl = await require('entity/article/control').default;
 
     const articleObj2 = {
       title: 'wewer',
@@ -75,19 +75,25 @@ describe('Deleting category', () => {
       categoryId: categoryThird._id,
     };
 
-    article2 = await articleModel.create(articleObj2);
-    article3 = await articleModel.create(articleObj3);
+    article2 = await articleControl.add(articleObj2);
+    article3 = await articleControl.add(articleObj3);
+
 
   });
 
   after(async () => {
     const categoryModel = await require('entity/category/model').default;
+    const categoryWithCountModel = await require('entity/categoryWithCount/model').default;
     const recipeModel = await require('entity/recipe/model').default;
     const articleModel = await require('entity/article/model').default;
 
     await categoryModel.model.deleteOne({ _id: categoryFirst._id });
     await categoryModel.model.deleteOne({ _id: categorySecond._id });
     await categoryModel.model.deleteOne({ _id: categoryThird._id });
+
+    await categoryWithCountModel.model.deleteOne({ _id: categoryFirst._id });
+    await categoryWithCountModel.model.deleteOne({ _id: categorySecond._id });
+    await categoryWithCountModel.model.deleteOne({ _id: categoryThird._id });
 
     await recipeModel.model.deleteOne({ _id: recipe1._id });
     await recipeModel.model.deleteOne({ _id: recipe2._id });
@@ -108,17 +114,29 @@ describe('Deleting category', () => {
 
       expect(name).to.equal(categorySecond.name);
       expect(parentCategoryId).to.equal(categoryFirst._id);
+
+      const categoryWithCountModel = await require('entity/categoryWithCount/model').default;
+      const categoryCount = await categoryWithCountModel.model.find({ _id: categorySecond._id });
+
+      expect(categoryCount[0].name).to.equal(name);
+      expect(categoryCount[0].parentCategoryId.toString()).to.equal(parentCategoryId);
+      expect(categoryCount[0].isDeleted).to.equal(true);
     });
 
     it('it should get category with parentCategoryId categoryFirst',  async () => {
-
       const res = await chai.request('http://localhost:4001')
         .get(`/category/${categoryThird._id}`);
-
       const { name, parentCategoryId } = res.body;
 
       expect(name).to.equal(categoryThird.name);
       expect(parentCategoryId).to.equal(categoryFirst._id);
+
+      const categoryWithCountModel = await require('entity/categoryWithCount/model').default;
+      const categoryCount = await categoryWithCountModel.model.find({ _id: categoryThird._id });
+
+      expect(categoryCount[0].name).to.equal(categoryThird.name);
+      expect(categoryCount[0].parentCategoryId.toString()).to.equal(categoryFirst._id);
+      expect(categoryCount[0].isDeleted).to.equal(false);
     });
 
     it('it should not get recipe, was deleted category',  async () => {

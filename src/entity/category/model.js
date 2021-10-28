@@ -2,6 +2,8 @@ import db from 'components/db';
 import QueryBuilder from 'components/dbExtendsModels/queryBuilder';
 import { Types } from 'mongoose';
 
+
+
 class CategoryModel extends QueryBuilder {
   async delete ( _id ) {
     const { parentCategoryId } = await super.getById( _id );

@@ -45,9 +45,6 @@ class Query {
   }
 
   getAllOfEntity (page = 0, limit) {
-    // if (page < 0) {
-    //   page = 0;
-    // }
     const skip = page * limit;
 
     return this.model.find({

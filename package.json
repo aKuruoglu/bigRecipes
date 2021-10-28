@@ -6,7 +6,7 @@
     "postinstall": "husky install",
     "build": "babel 'src/' -d 'dist/' --copy-files",
     "start": "NODE_ENV=development nodemon --exec babel-node src/index.js",
-    "test": "NODE_ENV=test mocha --require babel-polyfill --require @babel/register --timeout 5000 test/** --exit",
+    "test": "NODE_ENV=test mocha --require babel-polyfill --require @babel/register --timeout 500000 test/** --exit",
     "coverage": "nyc yarn test"
   },
   "author": "Alex",

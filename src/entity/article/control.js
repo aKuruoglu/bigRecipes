@@ -1,6 +1,7 @@
 import ArticleModel from 'entity/article/model';
 import ArticleCheck from 'entity/article/validateSchema';
 import CategoryCheck from 'entity/category/validateSchema';
+import CategoryWithCounts from 'entity/categoryWithCount/control';
 
 
 class ArticleControl {
@@ -34,18 +35,26 @@ class ArticleControl {
     const { categoryId } = body;
     await CategoryCheck.existId( categoryId );
     await ArticleCheck.create( body );
-    return ArticleModel.create( body );
+    const article = await ArticleModel.create( body );
+    await CategoryWithCounts.updateCountArticle(categoryId);
+    return article;
   }
 
   async remove ( { _id } = {} ) {
     await ArticleCheck.existId( _id );
-    return ArticleModel.delete( _id );
+    const article = await ArticleModel.delete( _id );
+    await CategoryWithCounts.updateCountArticle(article.categoryId);
+    return article;
   }
 
   async updateCategory ( { _id, categoryId } = {} ) {
     await ArticleCheck.existId( _id );
     await CategoryCheck.existId( categoryId );
-    return ArticleModel.updateCategory( { _id, categoryId } );
+    const oldArticle = await ArticleModel.getById(_id);
+    const article = await ArticleModel.updateCategory( { _id, categoryId } );
+    await CategoryWithCounts.updateCountArticle(oldArticle.categoryId);
+    await CategoryWithCounts.updateCountArticle(article.categoryId);
+    return article;
   }
 
   async update ( { _id } = {}, body = {} ) {
